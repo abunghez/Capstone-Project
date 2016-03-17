@@ -16,9 +16,10 @@ public class FlottoDbContract {
     public static final class ReceiptTableColumns implements BaseColumns {
         public static final String SUM_COL="sum";
         public static final String DATE_COL="date";
+        public static final String FILE_COL="file";
 
         public static final Uri buildReceipts() {
-            return BASE_CONTENT_URI.buildUpon().appendPath("receipts").build();
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
         }
 
         public static final String PATH="receipts";

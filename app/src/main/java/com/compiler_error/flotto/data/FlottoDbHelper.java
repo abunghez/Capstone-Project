@@ -20,7 +20,8 @@ public class FlottoDbHelper extends SQLiteOpenHelper {
         final String createReceiptsTable="CREATE TABLE "+FlottoDbContract.RECEIPT_TABLE + " ("
                 + FlottoDbContract.ReceiptTableColumns._ID + " INTEGER PRIMARY KEY,"
                 + FlottoDbContract.ReceiptTableColumns.SUM_COL + " INTEGER NOT NULL,"
-                + FlottoDbContract.ReceiptTableColumns.DATE_COL + " TEXT NOT NULL"
+                + FlottoDbContract.ReceiptTableColumns.DATE_COL + " TEXT NOT NULL,"
+                + FlottoDbContract.ReceiptTableColumns.FILE_COL + " TEXT"
                 + ");";
 
         db.execSQL(createReceiptsTable);

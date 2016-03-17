@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -22,6 +23,17 @@ public class FlottoContentProvider extends ContentProvider {
     private static final int RECEIPTS_WITH_SUM=103;
     private static final int RECEIPTS_WITH_DATE_AND_SUM=104;
 
+    private static final String RECEIPTS_BY_ID =
+            FlottoDbContract.ReceiptTableColumns._ID + " = ?";
+    private static final String RECEIPTS_BY_DATE =
+            FlottoDbContract.ReceiptTableColumns.DATE_COL + " = ?";
+
+    private static final String RECEIPTS_BY_SUM =
+            FlottoDbContract.ReceiptTableColumns.SUM_COL + " = ?";
+
+    private static final String RECEIPTS_BY_DATE_AND_SUM =
+            FlottoDbContract.ReceiptTableColumns.DATE_COL+ " = ? AND " +
+            FlottoDbContract.ReceiptTableColumns.SUM_COL + " = ?";
     private UriMatcher mUriMatcher = buildUriMatcher();
 
     static UriMatcher buildUriMatcher() {
@@ -42,11 +54,62 @@ public class FlottoContentProvider extends ContentProvider {
         return false;
     }
 
+
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        int match = mUriMatcher.match(uri);
+        Cursor ret = null;
+        switch (match) {
+            case RECEIPTS:
+                ret = mHelper.getReadableDatabase().query(
+                  FlottoDbContract.RECEIPT_TABLE,
+                        projection,
+                        null, null, null, null, sortOrder);
+                break;
+            case RECEIPTS_WITH_ID:
+                ret = mHelper.getReadableDatabase().query(
+                        FlottoDbContract.RECEIPT_TABLE,
+                        projection,
+                        RECEIPTS_BY_ID,
+                        selectionArgs,
+                        null, null, sortOrder
+                );
+                break;
+
+            case RECEIPTS_WITH_DATE:
+                ret = mHelper.getReadableDatabase().query(
+                  FlottoDbContract.RECEIPT_TABLE,
+                        projection,
+                        RECEIPTS_BY_DATE,
+                        selectionArgs,
+                        null, null, sortOrder
+                );
+                break;
+
+            case RECEIPTS_WITH_SUM:
+                ret = mHelper.getReadableDatabase().query(
+                        FlottoDbContract.RECEIPT_TABLE,
+                        projection,
+                        RECEIPTS_BY_SUM,
+                        selectionArgs,
+                        null, null, sortOrder
+                );
+                break;
+
+            case RECEIPTS_WITH_DATE_AND_SUM:
+                ret = mHelper.getReadableDatabase().query(
+                        FlottoDbContract.RECEIPT_TABLE,
+                        projection,
+                        RECEIPTS_BY_DATE_AND_SUM,
+                        selectionArgs,
+                        null, null, sortOrder
+                );
+                break;
+        }
+        return ret;
     }
+
 
     @Nullable
     @Override
@@ -60,7 +123,7 @@ public class FlottoContentProvider extends ContentProvider {
             case RECEIPTS_WITH_SUM:
             case RECEIPTS_WITH_DATE_AND_SUM:
                 return FlottoDbContract.ReceiptTableColumns.CONTENT_DIR_TYPE;
-            case RECEIPTS_WITH_ID
+            case RECEIPTS_WITH_ID:
                 return FlottoDbContract.ReceiptTableColumns.CONTENT_ITEM_TYPE;
 
             default:
@@ -73,7 +136,26 @@ public class FlottoContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        Uri retUri = null;
+
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+
+        switch (mUriMatcher.match(uri)) {
+            case RECEIPTS:
+                db.beginTransaction();
+                db.insertWithOnConflict(FlottoDbContract.RECEIPT_TABLE,
+                        null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                retUri = uri.buildUpon()
+                        .appendPath(values.getAsString(FlottoDbContract.ReceiptTableColumns._ID))
+                        .build();
+
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                break;
+            default:
+                break;
+        }
+        return retUri;
     }
 
     @Override

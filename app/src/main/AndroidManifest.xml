@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <provider
             android:authorities="com.compiler_error.flotto"
-            android:name=".FlottoContentProvider">
+            android:name=".data.FlottoContentProvider">
             <grant-uri-permission android:pathPattern=".*"/>
         </provider>
 

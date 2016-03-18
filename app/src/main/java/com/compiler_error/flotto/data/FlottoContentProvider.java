@@ -1,4 +1,4 @@
-package com.compiler_error.flotto;
+package com.compiler_error.flotto.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -39,18 +39,20 @@ public class FlottoContentProvider extends ContentProvider {
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        String authority = FlottoDbContract.BASE_CONTENT_URI.toString();
-
-        matcher.addURI(authority, null, RECEIPTS);
-        matcher.addURI(authority, "id", RECEIPTS_WITH_ID);
-        matcher.addURI(authority, "date", RECEIPTS_WITH_DATE);
-        matcher.addURI(authority, "sum", RECEIPTS_WITH_SUM);
-        matcher.addURI(authority, "sum_date", RECEIPTS_WITH_DATE_AND_SUM);
+        String authority = FlottoDbContract.CONTENT_AUTHORITY;
+        matcher.addURI(authority, null, 0);
+        matcher.addURI(authority, "receipts", RECEIPTS);
+        matcher.addURI(authority, "receipts/id", RECEIPTS_WITH_ID);
+        matcher.addURI(authority, "receipts/date", RECEIPTS_WITH_DATE);
+        matcher.addURI(authority, "receipts/sum", RECEIPTS_WITH_SUM);
+        matcher.addURI(authority, "receipts/sum_date", RECEIPTS_WITH_DATE_AND_SUM);
 
         return matcher;
     }
     @Override
     public boolean onCreate() {
+
+        mHelper = new FlottoDbHelper(getContext());
         return false;
     }
 
@@ -146,6 +148,7 @@ public class FlottoContentProvider extends ContentProvider {
                 db.insertWithOnConflict(FlottoDbContract.RECEIPT_TABLE,
                         null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 retUri = uri.buildUpon()
+                        .appendPath("id")
                         .appendPath(values.getAsString(FlottoDbContract.ReceiptTableColumns._ID))
                         .build();
 

@@ -74,6 +74,6 @@ public class AddReceiptFragment extends Fragment {
                 .remove(AddReceiptFragment.this)
                 .add(R.id.mainFragmentHolder, ((MainActivity) (getActivity())).mListFragment)
                 .commit();
-
+        ((MainActivity)getActivity()).mFab.setVisibility(View.VISIBLE);
     }
 }

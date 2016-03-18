@@ -31,11 +31,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (mListFragment != null)
                     getSupportFragmentManager().beginTransaction()
-                    .remove(mListFragment).commit();
+                            .remove(mListFragment).commit();
 
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.mainFragmentHolder, new AddReceiptFragment())
                         .commit();
+                mFab.setVisibility(View.GONE);
             }
 
         });
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mainFragmentHolder, mListFragment)
                 .commit();
+
     }
 
     @Override
@@ -98,13 +100,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        }  else if (id == R.id.nav_manage) {
 
         }
 

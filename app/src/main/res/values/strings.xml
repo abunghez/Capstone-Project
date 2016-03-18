@@ -11,4 +11,11 @@
     <string name="receipt_sum_label">Receipt Sum:</string>
     <string name="receipt_insert">Insert</string>
     <string name="receipt_cancel">Cancel</string>
+
+    <string name="add_new">Add New</string>
+    <string name="receipts">Receipts</string>
+    <string name="statistics">Stats</string>
+    <string name="did_i_win">Did I Win?</string>
+    <string name="map">Map</string>
+    <string name="settings">Settings</string>
 </resources>

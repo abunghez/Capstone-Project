@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.compiler_error.flotto.data.FlottoDbContract;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by andrei on 18.03.2016.
@@ -19,8 +21,9 @@ import com.compiler_error.flotto.data.FlottoDbContract;
 public class AddReceiptFragment extends Fragment {
 
     public static final String PHOTO_PATH_KEY="RECEIPT_PHOTO_PATH";
-    Button mInsert, mCancel;
+    Button mInsert;
     EditText mDate, mSum;
+    ImageView mImageView;
     public AddReceiptFragment() {
         super();
     }
@@ -55,26 +58,20 @@ public class AddReceiptFragment extends Fragment {
                         data
                 );
 
-                goBack();
 
             }
         });
 
-        mCancel = (Button) v.findViewById(R.id.goBackButton);
-        mCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
+        mImageView = (ImageView)v.findViewById(R.id.receiptImageView);
+        Bundle fragmentArgs = getArguments();
+        String path = fragmentArgs.getString(PHOTO_PATH_KEY);
+
+        if (path != null) {
+            Picasso.with(getActivity()).load(path).into(mImageView);
+        }
+
         return v;
     }
 
-    private void goBack() {
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .remove(AddReceiptFragment.this)
-                .add(R.id.mainFragmentHolder, ((MainActivity) (getActivity())).mListFragment)
-                .commit();
-        ((MainActivity)getActivity()).mFab.setVisibility(View.VISIBLE);
-    }
+
 }

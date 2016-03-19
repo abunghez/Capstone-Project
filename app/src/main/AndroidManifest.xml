@@ -27,6 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".NewReceiptActivity"
+            android:label="@string/new_receipt_label"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+
+
     </application>
 
 </manifest>

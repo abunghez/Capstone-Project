@@ -153,28 +153,13 @@ public class MainActivity extends AppCompatActivity
              * for now, just display the receipt detail fragment with the thumbnail of the
              * acquired image
              */
-            final AddReceiptFragment receiptFragment = new AddReceiptFragment();
+            Intent intent = new Intent(this, NewReceiptActivity.class);
 
-            Bundle fragmentArgs = new Bundle();
+            if (mCurrentPhotoFile != null) {
+                intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, mCurrentPhotoFile.toString());
+            }
 
-            if (mCurrentPhotoFile != null)
-                fragmentArgs.putString(AddReceiptFragment.PHOTO_PATH_KEY, mCurrentPhotoFile.toString());
-
-            receiptFragment.setArguments(fragmentArgs);
-
-            /**
-             * Apparently, doing the fragment work here directly will cause an IllegalStateException
-             * saying that this cannot be done after onSaveInstanceState. This is an workaround.
-             */
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    getSupportFragmentManager().beginTransaction()
-                            .remove(mListFragment)
-                            .add(R.id.mainFragmentHolder, receiptFragment)
-                            .commit();
-                }
-            });
+            startActivity(intent);
 
         } else {
             mCurrentPhotoFile = null;

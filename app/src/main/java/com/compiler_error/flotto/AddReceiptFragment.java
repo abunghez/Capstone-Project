@@ -66,7 +66,7 @@ public class AddReceiptFragment extends Fragment {
 
         mImageView = (ImageView)v.findViewById(R.id.receiptImageView);
         Bundle fragmentArgs = getArguments();
-        mFilePath = fragmentArgs.getString(PHOTO_PATH_KEY);
+        mFilePath = "file://"+fragmentArgs.getString(PHOTO_PATH_KEY);
 
         if (mFilePath != null) {
             Picasso.with(getActivity()).load(mFilePath).into(mImageView);

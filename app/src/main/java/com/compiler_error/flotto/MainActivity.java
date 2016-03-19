@@ -2,6 +2,7 @@ package com.compiler_error.flotto;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Uri mCurrentPhotoFile;
+    private String mCurrentPhotoFile;
     FloatingActionButton mFab;
     ListFragment mListFragment;
     @Override
@@ -133,8 +138,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (photoFile != null) {
-                mCurrentPhotoFile = Uri.fromFile(photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoFile);
+                mCurrentPhotoFile = photoFile.getAbsolutePath();
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
 
@@ -156,9 +161,43 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, NewReceiptActivity.class);
 
             if (mCurrentPhotoFile != null) {
-                intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, mCurrentPhotoFile.toString());
-            }
 
+                Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoFile);
+                Bitmap scaledBmp;
+
+                scaledBmp = Bitmap.createScaledBitmap(bmp,
+                        bmp.getWidth() / 4, bmp.getHeight() / 4, true);
+
+
+                File out = new File(mCurrentPhotoFile);
+                out.delete();
+
+                try {
+                    out.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                OutputStream os = null;
+                try {
+                    os = new FileOutputStream(out);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+
+                    return;
+                }
+
+                scaledBmp.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, mCurrentPhotoFile);
+            }
             startActivity(intent);
 
         } else {
@@ -168,11 +207,12 @@ public class MainActivity extends AppCompatActivity
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "JPEG_" + timeStamp+ ".jpg";
         File storageDir = getExternalFilesDir(null);
 
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        File image = new File(storageDir, imageFileName);
 
+        image.createNewFile();
         return image;
     }
 }

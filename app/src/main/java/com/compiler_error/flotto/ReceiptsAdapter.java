@@ -42,10 +42,10 @@ public class ReceiptsAdapter extends CursorAdapter {
 
         dateTextView.setText(cursor.getString(cursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.DATE_COL)));
         sumTextView.setText(cursor.getString(cursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.SUM_COL)));
-        /*Picasso.with(mContext)
+        Picasso.with(mContext)
                 .load(cursor.getString(cursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.FILE_COL)))
                 .into(thumbImageView);
-        */
+
 
     }
 

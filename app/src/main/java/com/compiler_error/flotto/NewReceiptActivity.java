@@ -24,6 +24,7 @@ public class NewReceiptActivity extends FragmentActivity{
         intent = getIntent();
 
         mImagePath = intent.getStringExtra(EXTRA_IMAGE_PATH);
+
         mReceiptFragment = new AddReceiptFragment();
         fragmentArgs = new Bundle();
         if (mImagePath!=null)

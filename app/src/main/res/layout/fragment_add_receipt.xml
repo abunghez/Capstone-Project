@@ -39,7 +39,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:layout_margin="16dp"
-                android:textSize="16sp"/>
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
             <Button
                 android:id="@+id/receiptAddButton"
                 android:text="@string/receipt_insert"

@@ -9,7 +9,7 @@
     <string name="new_receipt_label">New Receipt</string>
     <string name="receipt_date_label">Receipt Date:</string>
     <string name="receipt_sum_label">Receipt Sum:</string>
-    <string name="receipt_insert">Insert</string>
+    <string name="receipt_insert">Confirm</string>
     <string name="receipt_cancel">Cancel</string>
 
     <string name="add_new">Add New</string>

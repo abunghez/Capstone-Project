@@ -42,6 +42,13 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getLoaderManager().restartLoader(RECEIPTS_LOADER, null, this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), FlottoDbContract.ReceiptTableColumns.buildReceipts(),
                 null, null, null, null);

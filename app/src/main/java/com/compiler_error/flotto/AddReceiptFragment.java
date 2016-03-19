@@ -24,6 +24,7 @@ public class AddReceiptFragment extends Fragment {
     Button mInsert;
     EditText mDate, mSum;
     ImageView mImageView;
+    String mFilePath;
     public AddReceiptFragment() {
         super();
     }
@@ -52,22 +53,23 @@ public class AddReceiptFragment extends Fragment {
                 data = new ContentValues();
                 data.put(FlottoDbContract.ReceiptTableColumns.DATE_COL, date);
                 data.put(FlottoDbContract.ReceiptTableColumns.SUM_COL, sum);
+                data.put(FlottoDbContract.ReceiptTableColumns.FILE_COL, mFilePath);
 
                 getActivity().getContentResolver().insert(
                         FlottoDbContract.ReceiptTableColumns.buildReceipts(),
                         data
                 );
-
+                getActivity().finish();
 
             }
         });
 
         mImageView = (ImageView)v.findViewById(R.id.receiptImageView);
         Bundle fragmentArgs = getArguments();
-        String path = fragmentArgs.getString(PHOTO_PATH_KEY);
+        mFilePath = fragmentArgs.getString(PHOTO_PATH_KEY);
 
-        if (path != null) {
-            Picasso.with(getActivity()).load(path).into(mImageView);
+        if (mFilePath != null) {
+            Picasso.with(getActivity()).load(mFilePath).into(mImageView);
         }
 
         return v;

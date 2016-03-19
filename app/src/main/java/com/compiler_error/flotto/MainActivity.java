@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                mFab.setVisibility(View.GONE);
                 dispatchTakePictureIntent();
             }
 
@@ -58,12 +56,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mListFragment = (ListFragment)getSupportFragmentManager().findFragmentById(R.id.mainFragmentHolder);
+        if (mListFragment == null) {
 
-        mListFragment = new ListFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.mainFragmentHolder, mListFragment)
-                .commit();
-
+            mListFragment = new ListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.mainFragmentHolder, mListFragment)
+                    .commit();
+        }
     }
 
     @Override
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity
 
         } else {
             mCurrentPhotoFile = null;
-            mFab.setVisibility(View.VISIBLE);
         }
     }
 

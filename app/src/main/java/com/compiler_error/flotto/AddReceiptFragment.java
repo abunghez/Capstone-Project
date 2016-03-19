@@ -18,6 +18,7 @@ import com.compiler_error.flotto.data.FlottoDbContract;
  */
 public class AddReceiptFragment extends Fragment {
 
+    public static final String PHOTO_PATH_KEY="RECEIPT_PHOTO_PATH";
     Button mInsert, mCancel;
     EditText mDate, mSum;
     public AddReceiptFragment() {

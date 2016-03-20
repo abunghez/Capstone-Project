@@ -32,6 +32,7 @@
                 android:textStyle="bold"
                 android:textAlignment="textEnd"
                 android:selectAllOnFocus="true"
+                android:textColor="@color/primary_text"
                 />
             <EditText
                 android:id="@+id/receiptDatePicker"
@@ -41,7 +42,8 @@
                 android:layout_margin="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textColor="@color/secondary_text"/>
             <Button
                 android:id="@+id/receiptAddButton"
                 android:text="@string/receipt_insert"

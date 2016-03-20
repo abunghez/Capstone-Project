@@ -25,6 +25,7 @@
             android:text="abcd"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
+            android:textColor="@color/primary_text"
             />
         <TextView
             android:id="@+id/dateTextView"
@@ -35,6 +36,7 @@
             android:text="abcd"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"/>
+            android:layout_marginEnd="32dp"
+            android:textColor="@color/secondary_text"/>
     </LinearLayout>
 </LinearLayout>

@@ -25,6 +25,13 @@ public class NewReceiptActivity extends FragmentActivity{
 
         mImagePath = intent.getStringExtra(EXTRA_IMAGE_PATH);
 
+        mReceiptFragment = (AddReceiptFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.newReceiptFragmentHolder);
+
+        if (mReceiptFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(mReceiptFragment).commit();
+        }
+
         mReceiptFragment = new AddReceiptFragment();
         fragmentArgs = new Bundle();
         if (mImagePath!=null)

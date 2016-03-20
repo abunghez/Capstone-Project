@@ -19,7 +19,7 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Flotto"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:textColor="@color/primary_text"/>
+        android:textColor="@color/icons"/>
 
 
 </LinearLayout>

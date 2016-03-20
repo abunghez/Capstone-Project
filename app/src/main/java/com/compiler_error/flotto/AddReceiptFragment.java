@@ -42,6 +42,9 @@ public class AddReceiptFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v;
+
+        setRetainInstance(true);
+
         v = inflater.inflate(R.layout.fragment_add_receipt, container, false);
         mDate = (EditText) v.findViewById(R.id.receiptDatePicker);
         mSum = (EditText) v.findViewById(R.id.sumEditText);

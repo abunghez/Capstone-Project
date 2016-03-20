@@ -4,13 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toolbar;
 
 /**
  * Created by andrei on 19.03.2016.
  */
-public class NewReceiptActivity extends FragmentActivity{
+public class NewReceiptActivity extends AppCompatActivity{
     public final static String EXTRA_IMAGE_PATH="com.compiler_error.flotto.imagepath";
 
     AddReceiptFragment mReceiptFragment;

@@ -3,6 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/app_bar_receipt"/>
-    <include layout="@layout/content_new_receipt"/>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:id="@+id/newReceiptFragmentHolder">
+
+
+    </FrameLayout>
 </LinearLayout>

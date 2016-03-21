@@ -64,7 +64,7 @@ public class AddReceiptFragment extends Fragment {
 
                  @Override
                  public Dialog onCreateDialog(Bundle savedInstanceState) {
-                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                      Date date;
                      int year, month, day;
                      try {
@@ -86,7 +86,7 @@ public class AddReceiptFragment extends Fragment {
 
                  @Override
                  public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                     mDate.setText(year+"/"+String.format("%02d",monthOfYear+1)+"/"
+                     mDate.setText(year+"-"+String.format("%02d",monthOfYear+1)+"-"
                              +String.format("%02d",dayOfMonth));
                  }
              };

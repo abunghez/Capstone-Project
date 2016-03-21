@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                         this,
                         AddReceiptFragment.INVALID_ID,
                         0,
-                        new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
+                        new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
                         "file://"+mCurrentPhotoFile
                 );
 

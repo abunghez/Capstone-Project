@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, FlottoDbContract.ReceiptTableColumns.buildReceipts(),
+            return new CursorLoader(this, FlottoDbContract.ReceiptTableColumns.buildReceipts(),
                 null, null, null, null);
     }
 

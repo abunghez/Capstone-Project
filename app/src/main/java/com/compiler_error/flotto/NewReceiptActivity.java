@@ -13,19 +13,28 @@ import android.widget.Toolbar;
  * Created by andrei on 19.03.2016.
  */
 public class NewReceiptActivity extends AppCompatActivity{
-    public final static String EXTRA_IMAGE_PATH="com.compiler_error.flotto.imagepath";
-
+    public final static String EXTRA_IMAGE_PATH="com.compiler_error.flotto.newreceipt.imagepath";
+    public final static String EXTRA_SUM="com.compiler_error.flotto.newreceipt.sum";
+    public final static String EXTRA_DATE="com.compiler_error.flotto.newreceipt.date";
+    public final static String EXTRA_ID="com.compiler_error.flotto.newreceipt.id";
     AddReceiptFragment mReceiptFragment;
     String mImagePath;
+    int mId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent;
         Bundle fragmentArgs;
+        int sum;
+        String date;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_receipt);
         intent = getIntent();
 
         mImagePath = intent.getStringExtra(EXTRA_IMAGE_PATH);
+        sum = intent.getIntExtra(EXTRA_SUM, 0);
+        date = intent.getStringExtra(EXTRA_DATE);
+        mId = intent.getIntExtra(EXTRA_ID, AddReceiptFragment.INVALID_ID);
 
         mReceiptFragment = (AddReceiptFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.newReceiptFragmentHolder);
@@ -35,14 +44,30 @@ public class NewReceiptActivity extends AppCompatActivity{
         }
 
         mReceiptFragment = new AddReceiptFragment();
-        fragmentArgs = new Bundle();
-        if (mImagePath!=null)
-            fragmentArgs.putString(AddReceiptFragment.PHOTO_PATH_KEY, mImagePath);
 
+
+        fragmentArgs = AddReceiptFragment.packNewReceiptFragmentArgs(
+                mId,
+                sum,
+                date,
+                mImagePath
+                );
         mReceiptFragment.setArguments(fragmentArgs);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.newReceiptFragmentHolder, mReceiptFragment)
                 .commit();
+
+    }
+
+    static public Intent packNewReceiptIntent(Context context, int id, int sum, String date, String path) {
+        Intent intent = new Intent(context, NewReceiptActivity.class);
+
+        intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, path);
+        intent.putExtra(NewReceiptActivity.EXTRA_SUM, sum);
+        intent.putExtra(NewReceiptActivity.EXTRA_DATE, date);
+        intent.putExtra(NewReceiptActivity.EXTRA_ID, id);
+
+        return intent;
 
     }
 }

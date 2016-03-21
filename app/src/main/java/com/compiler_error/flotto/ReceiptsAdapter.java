@@ -1,7 +1,9 @@
 package com.compiler_error.flotto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.TypedValue;
@@ -24,8 +26,10 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
 
 
     Cursor mCursor;
-    public ReceiptsAdapter() {
+    Context mContext;
+    public ReceiptsAdapter(Context context) {
         super();
+        mContext = context;
     }
 
     @Override
@@ -41,28 +45,47 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (mCursor != null) {
-            int sum, tsize;
+            final int sum, tsize;
             mCursor.moveToPosition(position);
 
             sum = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.SUM_COL));
 
             if (sum < 50)
                 tsize = 16;
-            else tsize = (int) ((sum - 50)*16./949+16);
+            else if (sum < 999)
+                tsize = (int) ((sum - 50)*16./949+16);
+            else tsize = 32;
 
+            final String date, path;
 
+            date = mCursor
+                    .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.DATE_COL));
+
+            path = mCursor
+                    .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.FILE_COL));
             holder.sumTextView.setTextSize(tsize);
-            holder.dateTextView.setText(mCursor
-                    .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.DATE_COL)));;
-            holder.sumTextView.setText(mCursor
-                    .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.SUM_COL)));
-            Picasso.with(holder.thumbView.getContext())
-                    .load(mCursor
-                            .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.FILE_COL)))
-                    .into(holder.thumbView);
+            holder.dateTextView.setText(date);;
+            holder.sumTextView.setText(String.valueOf(sum));
 
+            Picasso.with(holder.thumbView.getContext())
+                    .load(path)
+                    .into(holder.thumbView);
+            holder.path = path;
+            holder.id = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns._ID));
+
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = NewReceiptActivity.packNewReceiptIntent(v.getContext(),
+                            holder.id,
+                            Integer.parseInt(holder.sumTextView.getText().toString()),
+                            holder.dateTextView.getText().toString(),
+                            holder.path);
+                    mContext.startActivity(intent);
+                }
+            });
 
         }
     }
@@ -87,12 +110,17 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView sumTextView, dateTextView;
         public ImageView thumbView;
+        public View container;
+        public int id;
+        public String path;
 
         public ViewHolder(View v) {
             super(v);
+            container = v;
             sumTextView=(TextView) v.findViewById(R.id.sumTextView);
             dateTextView=(TextView) v.findViewById(R.id.dateTextView);
             thumbView=(ImageView) v.findViewById(R.id.thumbImageView);
+            id = AddReceiptFragment.INVALID_ID;
         }
     }
 

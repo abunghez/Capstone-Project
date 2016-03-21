@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/add_new" />
         <item
-            android:id="@+id/nav_gallery"
-            android:title="@string/receipts" />
-
-        <item
             android:id="@+id/nav_stats"
             android:icon="@drawable/ic_menu_graph"
             android:title="@string/statistics" />

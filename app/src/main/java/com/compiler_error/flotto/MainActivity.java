@@ -2,6 +2,7 @@ package com.compiler_error.flotto;
 
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -10,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,7 +19,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mAdapter = new ReceiptsAdapter();
+        mAdapter = new ReceiptsAdapter(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.receiptRecycler);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -177,7 +176,14 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
 
-                intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, mCurrentPhotoFile);
+                intent = NewReceiptActivity.packNewReceiptIntent(
+                        this,
+                        AddReceiptFragment.INVALID_ID,
+                        0,
+                        new SimpleDateFormat("yyyy/MM/dd").format(new Date()),
+                        "file://"+mCurrentPhotoFile
+                );
+
             }
             startActivity(intent);
 
@@ -185,6 +191,7 @@ public class MainActivity extends AppCompatActivity
             mCurrentPhotoFile = null;
         }
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -194,8 +201,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             dispatchTakePictureIntent();
-        } else if (id == R.id.nav_gallery) {
-
         }  else if (id == R.id.nav_manage) {
 
         }

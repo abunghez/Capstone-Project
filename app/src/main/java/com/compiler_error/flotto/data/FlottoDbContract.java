@@ -28,4 +28,20 @@ public class FlottoDbContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE+"/"+CONTENT_AUTHORITY+"/"+PATH;
     }
+
+    public static Uri buildStatistics() {
+        return BASE_CONTENT_URI.buildUpon().appendPath("statistics").build();
+    }
+
+    public static Uri buildMaxSpent() {
+        return buildStatistics().buildUpon().appendPath("max_spent").build();
+    }
+
+    public static Uri buildAvgDaily() {
+        return buildStatistics().buildUpon().appendPath("avg_daily").build();
+    }
+
+    public static Uri buildMaxLocation() {
+        return buildStatistics().buildUpon().appendPath("max_location").build();
+    }
 }

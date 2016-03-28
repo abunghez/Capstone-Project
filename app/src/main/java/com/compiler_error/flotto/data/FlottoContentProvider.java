@@ -23,6 +23,29 @@ public class FlottoContentProvider extends ContentProvider {
     private static final int RECEIPTS_WITH_SUM=103;
     private static final int RECEIPTS_WITH_DATE_AND_SUM=104;
 
+
+
+    private static final int STATISTICS_MAX_SPENT=110;
+    private static final int STATISTICS_AVG_SPENT_DAILY=111;
+    private static final int STATISTICS_MAX_SPENT_LOCATION=112;
+
+    private final static String QUERY_DAILY_SUMS=
+                    "SELECT SUM("+FlottoDbContract.ReceiptTableColumns.SUM_COL+ ") AS DAILY_SUM," +
+                    FlottoDbContract.ReceiptTableColumns.DATE_COL +" "+
+                    "FROM "+ FlottoDbContract.RECEIPT_TABLE +
+                    " GROUP BY " + FlottoDbContract.ReceiptTableColumns.DATE_COL;
+
+    private final static String QUERY_MIN_DAY=
+                    "SELECT MIN(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) " +
+                            "FROM " + FlottoDbContract.RECEIPT_TABLE;
+    private final static String QUERY_MAX_DAY=
+                    "SELECT MAX(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) " +
+                       "FROM " + FlottoDbContract.RECEIPT_TABLE;
+
+    private final static String QUERY_MAX_SPENT_DAILY=
+            "SELECT MAX(DAILY_SUM) FROM ("+QUERY_DAILY_SUMS+")";
+
+
     private static final String RECEIPTS_BY_ID =
             FlottoDbContract.ReceiptTableColumns._ID + " = ?";
     private static final String RECEIPTS_BY_DATE =
@@ -46,6 +69,11 @@ public class FlottoContentProvider extends ContentProvider {
         matcher.addURI(authority, "receipts/date", RECEIPTS_WITH_DATE);
         matcher.addURI(authority, "receipts/sum", RECEIPTS_WITH_SUM);
         matcher.addURI(authority, "receipts/sum_date", RECEIPTS_WITH_DATE_AND_SUM);
+
+        matcher.addURI(authority, "statistics/max_spent", STATISTICS_MAX_SPENT);
+        matcher.addURI(authority, "statistics/avg_daily", STATISTICS_AVG_SPENT_DAILY);
+        matcher.addURI(authority, "statistics/max_location", STATISTICS_MAX_SPENT_LOCATION);
+
 
         return matcher;
     }
@@ -108,6 +136,11 @@ public class FlottoContentProvider extends ContentProvider {
                         null, null, sortOrder
                 );
                 break;
+
+            case STATISTICS_MAX_SPENT:
+                ret = mHelper.getReadableDatabase().rawQuery(QUERY_MAX_SPENT_DAILY, null);
+                break;
+
         }
         return ret;
     }
@@ -170,4 +203,6 @@ public class FlottoContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
+
+
 }

@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 
 /**
  * Created by andrei on 21.03.2016.
@@ -15,11 +16,7 @@ public class StatisticsCenter  {
     private OnDataReadyListener mOdrl;
     private boolean dataReady;
 
-    private final static String AVG_SPENDING_QUERY=
-            "SELECT AVERAGE(DAILY_SUM) from ("+
-                    "SELECT SUM("+FlottoDbContract.ReceiptTableColumns.SUM_COL+ ") AS DAILY_SUM" +
-                        "FROM "+ FlottoDbContract.RECEIPT_TABLE +
-                        " GROUP BY" + FlottoDbContract.ReceiptTableColumns.DATE_COL+ ") ";
+    private Cursor mMaxSpent;
 
 
 
@@ -38,11 +35,31 @@ public class StatisticsCenter  {
     }
 
     public synchronized void updateStatistics() {
-        ContentResolver cr;
 
-        cr = mContext.getContentResolver();
+        AsyncTask<Void, Void, Void> updateTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ContentResolver cr;
 
-        Cursor avgSpending;
+                cr = mContext.getContentResolver();
+
+                Cursor maxSpent;
+
+                maxSpent = cr.query(FlottoDbContract.buildMaxLocation(), null, null, null,null);
+
+                mMaxSpent = maxSpent;
+                return null;
+
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (mOdrl != null) {
+                    mOdrl.onDataReady();
+                }
+            }
+        };
+
 
 
 

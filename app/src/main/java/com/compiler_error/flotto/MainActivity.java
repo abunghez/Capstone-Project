@@ -203,6 +203,10 @@ public class MainActivity extends AppCompatActivity
             dispatchTakePictureIntent();
         }  else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_stats) {
+            Intent i = new Intent(this, StatsActivity.class);
+
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

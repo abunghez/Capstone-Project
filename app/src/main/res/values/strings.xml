@@ -18,5 +18,7 @@
     <string name="did_i_win">Did I Win?</string>
     <string name="map">Map</string>
     <string name="settings">Settings</string>
-    <string name="title_activity_stats">StatsActivity</string>
+    <string name="title_activity_stats">Statistics</string>
+
+    <string name="max_spent_description">Max spent in one day</string>
 </resources>

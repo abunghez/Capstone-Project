@@ -45,7 +45,7 @@ public class StatisticsCenter  {
 
                 Cursor maxSpent;
 
-                maxSpent = cr.query(FlottoDbContract.buildMaxLocation(), null, null, null,null);
+                maxSpent = cr.query(FlottoDbContract.buildMaxSpent(), null, null, null,null);
 
                 mMaxSpent = maxSpent;
                 return null;
@@ -60,11 +60,15 @@ public class StatisticsCenter  {
             }
         };
 
+        updateTask.execute();
+
 
 
 
     }
-    public abstract class OnDataReadyListener {
-        public abstract void onDataReady();
+
+    public Cursor getMaxSpent() {
+        return mMaxSpent;
     }
+
 }

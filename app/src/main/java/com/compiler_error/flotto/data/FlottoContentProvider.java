@@ -43,7 +43,7 @@ public class FlottoContentProvider extends ContentProvider {
                        "FROM " + FlottoDbContract.RECEIPT_TABLE;
 
     private final static String QUERY_MAX_SPENT_DAILY=
-            "SELECT MAX(DAILY_SUM) FROM ("+QUERY_DAILY_SUMS+")";
+            "SELECT MAX(DAILY_SUM) as MAX_SPENT FROM ("+QUERY_DAILY_SUMS+")";
 
 
     private static final String RECEIPTS_BY_ID =

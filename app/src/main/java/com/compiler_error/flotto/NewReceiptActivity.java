@@ -2,12 +2,15 @@ package com.compiler_error.flotto;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toolbar;
+
+import java.util.ArrayList;
 
 /**
  * Created by andrei on 19.03.2016.
@@ -17,6 +20,7 @@ public class NewReceiptActivity extends AppCompatActivity{
     public final static String EXTRA_SUM="com.compiler_error.flotto.newreceipt.sum";
     public final static String EXTRA_DATE="com.compiler_error.flotto.newreceipt.date";
     public final static String EXTRA_ID="com.compiler_error.flotto.newreceipt.id";
+    public final static String EXTRA_LOCATION="com.compiler_error.flotto.newreceipt.location";
     AddReceiptFragment mReceiptFragment;
     String mImagePath;
     int mId;
@@ -59,13 +63,18 @@ public class NewReceiptActivity extends AppCompatActivity{
 
     }
 
-    static public Intent packNewReceiptIntent(Context context, int id, int sum, String date, String path) {
+    static public Intent packNewReceiptIntent(Context context, int id, int sum, String date, String path, Location loc) {
         Intent intent = new Intent(context, NewReceiptActivity.class);
 
         intent.putExtra(NewReceiptActivity.EXTRA_IMAGE_PATH, path);
         intent.putExtra(NewReceiptActivity.EXTRA_SUM, sum);
         intent.putExtra(NewReceiptActivity.EXTRA_DATE, date);
         intent.putExtra(NewReceiptActivity.EXTRA_ID, id);
+
+        Bundle locBundle = new Bundle();
+        locBundle.putParcelable(NewReceiptActivity.EXTRA_LOCATION, loc);
+        intent.putExtra(NewReceiptActivity.EXTRA_LOCATION, locBundle);
+
 
         return intent;
 

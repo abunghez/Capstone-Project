@@ -17,6 +17,8 @@ public class FlottoDbContract {
         public static final String SUM_COL="sum";
         public static final String DATE_COL="date";
         public static final String FILE_COL="file";
+        public static final String LATI_COL="latitude";
+        public static final String LONGI_COL="longitude";
 
         public static final Uri buildReceipts() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();

@@ -82,7 +82,8 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
                             holder.id,
                             Integer.parseInt(holder.sumTextView.getText().toString()),
                             holder.dateTextView.getText().toString(),
-                            holder.path);
+                            holder.path,
+                            null);
                     mContext.startActivity(intent);
                 }
             });

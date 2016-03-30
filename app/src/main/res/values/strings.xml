@@ -21,4 +21,5 @@
     <string name="title_activity_stats">Statistics</string>
 
     <string name="max_spent_description">Max spent in one day</string>
+    <string name="daily_avg_description">Average spent daily</string>
 </resources>

@@ -16,7 +16,7 @@ public class StatisticsCenter  {
     private OnDataReadyListener mOdrl;
     private boolean dataReady;
 
-    private Cursor mMaxSpent;
+    private Cursor mMaxSpent, mAvgSpent;
 
 
 
@@ -41,13 +41,18 @@ public class StatisticsCenter  {
             protected Void doInBackground(Void... params) {
                 ContentResolver cr;
 
+                /* cleanup */
+                if (mMaxSpent != null)
+                    mMaxSpent.close();
+
+                if (mAvgSpent != null)
+                    mAvgSpent.close();
+
                 cr = mContext.getContentResolver();
 
-                Cursor maxSpent;
 
-                maxSpent = cr.query(FlottoDbContract.buildMaxSpent(), null, null, null,null);
-
-                mMaxSpent = maxSpent;
+                mMaxSpent = cr.query(FlottoDbContract.buildMaxSpent(), null, null, null, null);
+                mAvgSpent = cr.query(FlottoDbContract.buildAvgDaily(), null, null, null, null);
                 return null;
 
             }
@@ -71,4 +76,7 @@ public class StatisticsCenter  {
         return mMaxSpent;
     }
 
+    public Cursor getAvgSpent() {
+        return mAvgSpent;
+    }
 }

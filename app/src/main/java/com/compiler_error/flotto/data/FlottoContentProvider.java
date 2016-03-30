@@ -8,9 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.compiler_error.flotto.data.FlottoDbContract;
-import com.compiler_error.flotto.data.FlottoDbHelper;
-
 /**
  * Created by andrei on 17.03.2016.
  */
@@ -36,16 +33,21 @@ public class FlottoContentProvider extends ContentProvider {
                     " GROUP BY " + FlottoDbContract.ReceiptTableColumns.DATE_COL;
 
     private final static String QUERY_MIN_DAY=
-                    "SELECT MIN(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) " +
+                    "SELECT MIN(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) AS MIN_DAY " +
                             "FROM " + FlottoDbContract.RECEIPT_TABLE;
     private final static String QUERY_MAX_DAY=
-                    "SELECT MAX(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) " +
+                    "SELECT MAX(julianday("+FlottoDbContract.ReceiptTableColumns.DATE_COL+")) AS MAX_DAY " +
                        "FROM " + FlottoDbContract.RECEIPT_TABLE;
 
     private final static String QUERY_MAX_SPENT_DAILY=
             "SELECT MAX(DAILY_SUM) as MAX_SPENT FROM ("+QUERY_DAILY_SUMS+")";
 
 
+    private final static String QUERY_DAILY_AVG_1 =
+            "SELECT SUM(" + FlottoDbContract.ReceiptTableColumns.SUM_COL+")/";
+
+    private final static String QUERY_DAILY_AVG_2 = " AS AVG_SUM " +
+                    "FROM "+ FlottoDbContract.RECEIPT_TABLE;
     private static final String RECEIPTS_BY_ID =
             FlottoDbContract.ReceiptTableColumns._ID + " = ?";
     private static final String RECEIPTS_BY_DATE =
@@ -140,6 +142,30 @@ public class FlottoContentProvider extends ContentProvider {
             case STATISTICS_MAX_SPENT:
                 ret = mHelper.getReadableDatabase().rawQuery(QUERY_MAX_SPENT_DAILY, null);
                 break;
+
+            case STATISTICS_AVG_SPENT_DAILY: {
+                int min_day, max_day;
+
+                ret = mHelper.getReadableDatabase().rawQuery(QUERY_MIN_DAY,null);
+                if (ret != null && ret.moveToFirst()) {
+                    min_day = ret.getInt(ret.getColumnIndex("MIN_DAY"));
+                    ret.close();
+                } else return null;
+
+                ret = mHelper.getReadableDatabase().rawQuery(QUERY_MAX_DAY, null);
+                if (ret != null && ret.moveToFirst()) {
+                    max_day = ret.getInt(ret.getColumnIndex("MAX_DAY"));
+                    ret.close();
+                } else return null;
+
+                if (max_day < min_day) return null;
+
+                ret = mHelper.getReadableDatabase().rawQuery(QUERY_DAILY_AVG_1 + (max_day - min_day+1) +
+                        QUERY_DAILY_AVG_2, null);
+
+           }
+
+
 
         }
         return ret;

@@ -17,7 +17,7 @@ import com.compiler_error.flotto.data.StatisticsCenter;
 public class StatsActivity extends AppCompatActivity {
 
     StatisticsCenter mStats;
-    CardView mMaxSpentCard;
+    CardView mMaxSpentCard, mAvgSpentCard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +29,7 @@ public class StatsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMaxSpentCard = (CardView) findViewById(R.id.cardMaxSpent);
+        mAvgSpentCard = (CardView) findViewById(R.id.cardAvgSpent);
 
         mStats = new StatisticsCenter(this);
 
@@ -39,12 +40,21 @@ public class StatsActivity extends AppCompatActivity {
             public void onDataReady() {
                 Cursor  maxSpent = mStats.getMaxSpent();
 
-                int ms, msIndex;
+                int val, valIndex;
 
                 if (maxSpent != null && maxSpent.moveToFirst()) {
-                    msIndex = maxSpent.getColumnIndex("MAX_SPENT");
-                    ms = maxSpent.getInt(msIndex);
-                    updateCard(mMaxSpentCard, getString(R.string.max_spent_description), String.valueOf(ms));
+                    valIndex = maxSpent.getColumnIndex("MAX_SPENT");
+                    val = maxSpent.getInt(valIndex);
+                    updateCard(mMaxSpentCard, getString(R.string.max_spent_description), String.valueOf(val));
+
+                }
+
+                Cursor avgSpent = mStats.getAvgSpent();
+
+                if (avgSpent != null && avgSpent.moveToFirst()) {
+                    valIndex = avgSpent.getColumnIndex("AVG_SUM");
+                    val = avgSpent.getInt(valIndex);
+                    updateCard(mAvgSpentCard, getString(R.string.daily_avg_description), String.valueOf(val));
                 }
 
             }

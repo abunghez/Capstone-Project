@@ -23,6 +23,7 @@ public class NewReceiptActivity extends AppCompatActivity{
     public final static String EXTRA_LOCATION="com.compiler_error.flotto.newreceipt.location";
     AddReceiptFragment mReceiptFragment;
     String mImagePath;
+    Location mLocation;
     int mId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,11 @@ public class NewReceiptActivity extends AppCompatActivity{
         date = intent.getStringExtra(EXTRA_DATE);
         mId = intent.getIntExtra(EXTRA_ID, AddReceiptFragment.INVALID_ID);
 
+        Bundle locBundle = intent.getBundleExtra(EXTRA_LOCATION);
+        if (locBundle != null) {
+            mLocation = locBundle.getParcelable(EXTRA_LOCATION);
+        }
+
         mReceiptFragment = (AddReceiptFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.newReceiptFragmentHolder);
 
@@ -54,7 +60,8 @@ public class NewReceiptActivity extends AppCompatActivity{
                 mId,
                 sum,
                 date,
-                mImagePath
+                mImagePath,
+                mLocation
                 );
         mReceiptFragment.setArguments(fragmentArgs);
         getSupportFragmentManager().beginTransaction()

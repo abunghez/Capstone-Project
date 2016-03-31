@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,12 +36,14 @@ public class AddReceiptFragment extends Fragment {
     public static final String SUM_KEY="SUM";
     public static final String DATE_KEY="DATE";
     public static final String ID_KEY="ID";
+    public static final String LOCATION_KEY="LOCATION";
     Button mInsert;
     EditText mDate, mSum;
     ImageView mImageView;
     String mFilePath;
     public static final int INVALID_ID=-1;
     int mId = INVALID_ID;
+    Location mLocation;
     public AddReceiptFragment() {
         super();
     }
@@ -115,6 +118,13 @@ public class AddReceiptFragment extends Fragment {
                 data.put(FlottoDbContract.ReceiptTableColumns.DATE_COL, date);
                 data.put(FlottoDbContract.ReceiptTableColumns.SUM_COL, sum);
                 data.put(FlottoDbContract.ReceiptTableColumns.FILE_COL, mFilePath);
+                if (mLocation != null) {
+                    data.put(FlottoDbContract.ReceiptTableColumns.LATI_COL, mLocation.getLatitude());
+                    data.put(FlottoDbContract.ReceiptTableColumns.LONGI_COL, mLocation.getLongitude());
+                } else {
+                    data.put(FlottoDbContract.ReceiptTableColumns.LATI_COL, -1.);
+                    data.put(FlottoDbContract.ReceiptTableColumns.LONGI_COL, -1.);
+                }
 
                 if (mId >= 0) {
                     data.put(FlottoDbContract.ReceiptTableColumns._ID, mId);
@@ -138,7 +148,11 @@ public class AddReceiptFragment extends Fragment {
             Picasso.with(getActivity()).load(mFilePath).into(mImageView);
         }
 
+
         mId = fragmentArgs.getInt(ID_KEY, INVALID_ID);
+
+
+        mLocation = fragmentArgs.getParcelable(LOCATION_KEY);
         return v;
     }
 
@@ -149,8 +163,19 @@ public class AddReceiptFragment extends Fragment {
         fragmentArgs.putInt(SUM_KEY, sum);
         if (date != null) fragmentArgs.putString(DATE_KEY, date);
         if (path != null) fragmentArgs.putString(PHOTO_PATH_KEY, path);
+
         return fragmentArgs;
 
+    }
+
+    static public Bundle packNewReceiptFragmentArgs(int id, int sum, String date, String path,
+                                                    Location loc) {
+        Bundle fragmentArgs;
+        fragmentArgs = packNewReceiptFragmentArgs(id, sum, date, path);
+        if (loc != null) {
+            fragmentArgs.putParcelable(LOCATION_KEY, loc);
+        }
+        return fragmentArgs;
     }
 
 }

@@ -3,6 +3,7 @@ package com.compiler_error.flotto;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -75,6 +76,14 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
             holder.path = path;
             holder.id = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns._ID));
 
+            holder.location = new Location("");
+            double lati, longi;
+
+            lati = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LATI_COL));
+            longi = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LONGI_COL));
+
+            holder.location.setLatitude(lati);
+            holder.location.setLongitude(longi);
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,7 +92,7 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
                             Integer.parseInt(holder.sumTextView.getText().toString()),
                             holder.dateTextView.getText().toString(),
                             holder.path,
-                            null);
+                            holder.location);
                     mContext.startActivity(intent);
                 }
             });
@@ -114,6 +123,7 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
         public View container;
         public int id;
         public String path;
+        public Location location;
 
         public ViewHolder(View v) {
             super(v);

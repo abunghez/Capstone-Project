@@ -173,12 +173,14 @@ public class AddReceiptFragment extends Fragment {
 
         mLocationLabel = (TextView) v.findViewById(R.id.locationLabel);
 
+        if (mLocation != null) {
        /* get address from location */
-        Intent i = new Intent(getActivity(), FetchAddressIntentService.class);
-        mReceiver = new AddressResultReceiver(new Handler());
-        i.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
-        i.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLocation);
-        getActivity().startService(i);
+            Intent i = new Intent(getActivity(), FetchAddressIntentService.class);
+            mReceiver = new AddressResultReceiver(new Handler());
+            i.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
+            i.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLocation);
+            getActivity().startService(i);
+        }
         return v;
     }
 

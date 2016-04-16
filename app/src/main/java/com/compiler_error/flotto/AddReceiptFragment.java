@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -44,10 +46,25 @@ public class AddReceiptFragment extends Fragment {
     public static final int INVALID_ID=-1;
     int mId = INVALID_ID;
     Location mLocation;
+    TextView mLocationLabel;
+
     public AddReceiptFragment() {
         super();
     }
 
+    AddressResultReceiver mReceiver;
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            String locationString = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            mLocationLabel.setText(locationString);
+        }
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,6 +170,15 @@ public class AddReceiptFragment extends Fragment {
 
 
         mLocation = fragmentArgs.getParcelable(LOCATION_KEY);
+
+        mLocationLabel = (TextView) v.findViewById(R.id.locationLabel);
+
+       /* get address from location */
+        Intent i = new Intent(getActivity(), FetchAddressIntentService.class);
+        mReceiver = new AddressResultReceiver(new Handler());
+        i.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
+        i.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLocation);
+        getActivity().startService(i);
         return v;
     }
 

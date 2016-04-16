@@ -79,8 +79,8 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
             holder.location = new Location("");
             double lati, longi;
 
-            lati = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LATI_COL));
-            longi = mCursor.getInt(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LONGI_COL));
+            lati = mCursor.getDouble(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LATI_COL));
+            longi = mCursor.getDouble(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LONGI_COL));
 
             holder.location.setLatitude(lati);
             holder.location.setLongitude(longi);

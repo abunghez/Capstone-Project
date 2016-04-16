@@ -46,6 +46,17 @@
                 android:textStyle="bold"
                 android:textColor="@color/secondary_text"
                 />
+
+            <TextView
+                android:id="@+id/locationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:textColor="@color/secondary_text"/>
+
             <Button
                 android:id="@+id/receiptAddButton"
                 android:text="@string/receipt_insert"

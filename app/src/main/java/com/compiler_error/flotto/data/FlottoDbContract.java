@@ -43,7 +43,5 @@ public class FlottoDbContract {
         return buildStatistics().buildUpon().appendPath("avg_daily").build();
     }
 
-    public static Uri buildMaxLocation() {
-        return buildStatistics().buildUpon().appendPath("max_location").build();
-    }
+
 }

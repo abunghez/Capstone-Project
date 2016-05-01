@@ -24,7 +24,6 @@ public class FlottoContentProvider extends ContentProvider {
 
     private static final int STATISTICS_MAX_SPENT=110;
     private static final int STATISTICS_AVG_SPENT_DAILY=111;
-    private static final int STATISTICS_MAX_SPENT_LOCATION=112;
 
     private final static String QUERY_DAILY_SUMS=
                     "SELECT SUM("+FlottoDbContract.ReceiptTableColumns.SUM_COL+ ") AS DAILY_SUM," +
@@ -41,6 +40,7 @@ public class FlottoContentProvider extends ContentProvider {
 
     private final static String QUERY_MAX_SPENT_DAILY=
             "SELECT MAX(DAILY_SUM) as MAX_SPENT FROM ("+QUERY_DAILY_SUMS+")";
+
 
 
     private final static String QUERY_DAILY_AVG_1 =
@@ -74,7 +74,6 @@ public class FlottoContentProvider extends ContentProvider {
 
         matcher.addURI(authority, "statistics/max_spent", STATISTICS_MAX_SPENT);
         matcher.addURI(authority, "statistics/avg_daily", STATISTICS_AVG_SPENT_DAILY);
-        matcher.addURI(authority, "statistics/max_location", STATISTICS_MAX_SPENT_LOCATION);
 
 
         return matcher;

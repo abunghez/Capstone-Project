@@ -1,8 +1,11 @@
 package com.compiler_error.flotto;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,18 +21,34 @@ import com.compiler_error.flotto.data.StatisticsCenter;
 public class StatsActivity extends AppCompatActivity {
 
     StatisticsCenter mStats;
-    CardView mMaxSpentCard, mAvgSpentCard;
+    CardView mMaxSpentCard, mAvgSpentCard, mMaxLocationCard;
     ProgressBar mProgressBar;
 
+
+    AddressResultReceiver mReceiver;
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            String locationString = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            ((TextView)mMaxLocationCard.findViewById(R.id.statTextViewLocation)).setText(locationString);
+        }
+    }
     void allCardsGone() {
         mMaxSpentCard.setVisibility(View.GONE);
         mAvgSpentCard.setVisibility(View.GONE);
+        mMaxLocationCard.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
     void allCardsVisible() {
         mMaxSpentCard.setVisibility(View.VISIBLE);
         mAvgSpentCard.setVisibility(View.VISIBLE);
+        mMaxLocationCard.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
     }
     @Override
@@ -44,6 +63,7 @@ public class StatsActivity extends AppCompatActivity {
 
         mMaxSpentCard = (CardView) findViewById(R.id.cardMaxSpent);
         mAvgSpentCard = (CardView) findViewById(R.id.cardAvgSpent);
+        mMaxLocationCard = (CardView) findViewById(R.id.cardMaxLocation);
         mProgressBar = (ProgressBar) findViewById(R.id.statSpinner);
         allCardsGone();
         mStats = new StatisticsCenter(this);
@@ -71,6 +91,15 @@ public class StatsActivity extends AppCompatActivity {
                     val = avgSpent.getInt(valIndex);
                     updateCard(mAvgSpentCard, getString(R.string.daily_avg_description), String.valueOf(val));
                 }
+
+
+                updateCard(mMaxLocationCard, getString(R.string.max_spent_location), String.valueOf(mStats.getMaxLocationSum()));
+
+                mReceiver = new AddressResultReceiver(new Handler());
+                Intent intent = new Intent(StatsActivity.this, FetchAddressIntentService.class);
+                intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
+                intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mStats.getMaxLocation());
+                StatsActivity.this.startService(intent);
 
                 allCardsVisible();
 

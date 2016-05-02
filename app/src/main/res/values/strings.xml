@@ -22,4 +22,5 @@
 
     <string name="max_spent_description">Max spent in one day</string>
     <string name="daily_avg_description">Average spent daily</string>
+    <string name="max_spent_location">Max spent in one location</string>
 </resources>

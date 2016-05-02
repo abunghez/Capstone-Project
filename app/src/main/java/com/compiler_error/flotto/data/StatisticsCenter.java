@@ -23,6 +23,17 @@ public class StatisticsCenter  {
     private Cursor mMaxSpent, mAvgSpent;
     private Cursor allReceipts;
 
+    private Location maxLocation;
+    private int maxLocationSum;
+
+    public Location getMaxLocation() {
+        return maxLocation;
+    }
+
+    public int getMaxLocationSum() {
+        return maxLocationSum;
+    }
+
 
     class Area {
         Location center;
@@ -50,6 +61,14 @@ public class StatisticsCenter  {
             center.setLatitude(sumLati / locations.size());
             center.setLongitude(sumLongi / locations.size());
 
+        }
+
+        public int getSum() {
+            return totalSum;
+        }
+
+        public Location getLocation() {
+            return center;
         }
     }
 
@@ -89,10 +108,10 @@ public class StatisticsCenter  {
                 mAvgSpent = cr.query(FlottoDbContract.buildAvgDaily(), null, null, null, null);
 
                 allReceipts = cr.query(FlottoDbContract.buildReceipts(), null, null, null, FlottoDbContract.ReceiptTableColumns.DATE_COL);
-                
+
                 if (allReceipts!=null) {
                     areas = new ArrayList<Area>();
-
+                    maxLocationSum = 0;
                     if (allReceipts.moveToFirst()) {
 
                         do {
@@ -114,6 +133,10 @@ public class StatisticsCenter  {
                                     /* found an area to insert this location into */
                                     a.insert(l, sum);
                                     found = true;
+                                    if (a.getSum() > maxLocationSum) {
+                                        maxLocationSum = a.getSum();
+                                        maxLocation = a.getLocation();
+                                    }
                                     break;
                                 }
                             }
@@ -121,6 +144,11 @@ public class StatisticsCenter  {
                             if (!found) {
                                 /* create a new are with this location */
                                 areas.add(new Area(l, sum));
+
+                                if (sum > maxLocationSum) {
+                                    maxLocationSum = sum;
+                                    maxLocation = l;
+                                }
                             }
 
                         } while (allReceipts.moveToNext());

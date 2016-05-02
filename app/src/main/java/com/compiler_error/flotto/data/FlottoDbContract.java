@@ -44,4 +44,8 @@ public class FlottoDbContract {
     }
 
 
+    public static Uri buildReceipts() {
+        return BASE_CONTENT_URI.buildUpon().appendPath("receipts").build();
+    }
+
 }

@@ -4,7 +4,11 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+
+import java.util.ArrayList;
 
 /**
  * Created by andrei on 21.03.2016.
@@ -17,9 +21,39 @@ public class StatisticsCenter  {
     private boolean dataReady;
 
     private Cursor mMaxSpent, mAvgSpent;
+    private Cursor allReceipts;
 
 
+    class Area {
+        Location center;
+        int totalSum;
+        ArrayList<Location> locations;
+        double sumLati, sumLongi;
 
+        public Area(Location c, int s) {
+            center = c;
+            totalSum = s;
+            locations  = new ArrayList<Location>();
+            locations.add(c);
+            sumLati = c.getLatitude();
+            sumLongi = c.getLongitude();
+        }
+
+        public void insert(Location l, int s) {
+            totalSum+=s;
+
+            sumLati += l.getLatitude();
+            sumLongi += l.getLongitude();
+
+            locations.add(l);
+
+            center.setLatitude(sumLati / locations.size());
+            center.setLongitude(sumLongi / locations.size());
+
+        }
+    }
+
+    private ArrayList<Area> areas;
 
     public StatisticsCenter(Context context) {
         mContext = context;
@@ -53,6 +87,46 @@ public class StatisticsCenter  {
 
                 mMaxSpent = cr.query(FlottoDbContract.buildMaxSpent(), null, null, null, null);
                 mAvgSpent = cr.query(FlottoDbContract.buildAvgDaily(), null, null, null, null);
+
+                allReceipts = cr.query(FlottoDbContract.buildReceipts(), null, null, null, FlottoDbContract.ReceiptTableColumns.DATE_COL);
+                
+                if (allReceipts!=null) {
+                    areas = new ArrayList<Area>();
+
+                    if (allReceipts.moveToFirst()) {
+
+                        do {
+                            Location l;
+                            double lati, longi;
+                            int sum;
+
+                            sum = allReceipts.getInt(allReceipts.getColumnIndex(FlottoDbContract.ReceiptTableColumns.SUM_COL));
+                            lati = allReceipts.getDouble(allReceipts.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LATI_COL));
+                            longi = allReceipts.getDouble(allReceipts.getColumnIndex(FlottoDbContract.ReceiptTableColumns.LONGI_COL));
+
+                            l = new Location("");
+                            l.setLatitude(lati);
+                            l.setLongitude(longi);
+
+                            boolean found = false;
+                            for (Area a:areas) {
+                                if (a.center.distanceTo(l) < 1000) {
+                                    /* found an area to insert this location into */
+                                    a.insert(l, sum);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found) {
+                                /* create a new are with this location */
+                                areas.add(new Area(l, sum));
+                            }
+
+                        } while (allReceipts.moveToNext());
+                    }
+
+                }
                 return null;
 
             }

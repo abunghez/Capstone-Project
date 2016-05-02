@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.compiler_error.flotto.data.OnDataReadyListener;
@@ -18,6 +19,19 @@ public class StatsActivity extends AppCompatActivity {
 
     StatisticsCenter mStats;
     CardView mMaxSpentCard, mAvgSpentCard;
+    ProgressBar mProgressBar;
+
+    void allCardsGone() {
+        mMaxSpentCard.setVisibility(View.GONE);
+        mAvgSpentCard.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    void allCardsVisible() {
+        mMaxSpentCard.setVisibility(View.VISIBLE);
+        mAvgSpentCard.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +44,8 @@ public class StatsActivity extends AppCompatActivity {
 
         mMaxSpentCard = (CardView) findViewById(R.id.cardMaxSpent);
         mAvgSpentCard = (CardView) findViewById(R.id.cardAvgSpent);
-
+        mProgressBar = (ProgressBar) findViewById(R.id.statSpinner);
+        allCardsGone();
         mStats = new StatisticsCenter(this);
 
         mStats.setOnDataReadyListener(new OnDataReadyListener() {
@@ -56,6 +71,8 @@ public class StatsActivity extends AppCompatActivity {
                     val = avgSpent.getInt(valIndex);
                     updateCard(mAvgSpentCard, getString(R.string.daily_avg_description), String.valueOf(val));
                 }
+
+                allCardsVisible();
 
             }
         });

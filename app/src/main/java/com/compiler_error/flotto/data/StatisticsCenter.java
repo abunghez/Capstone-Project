@@ -18,7 +18,7 @@ public class StatisticsCenter  {
 
 
     private static Context mContext;
-    private static OnDataReadyListener mOdrl;
+
     private static boolean dataReady;
 
     private static Cursor mMaxSpent, mAvgSpent;
@@ -39,17 +39,29 @@ public class StatisticsCenter  {
 
     private static ArrayList<Area> areas;
 
+
+    private static ArrayList<OnDataReadyListener> listeners;
+
+
+    public static ArrayList<Area> getAreas() {
+        return areas;
+    }
+
     public static void initialize(Context context) {
         mContext = context;
-        mOdrl = null;
         dataReady = false;
         areas = new ArrayList<Area>();
+        listeners = new ArrayList<OnDataReadyListener>();
     }
-    public synchronized static void setOnDataReadyListener(OnDataReadyListener listener) {
-        mOdrl = listener;
-        if (dataReady) {
-            mOdrl.onDataReady();
-        }
+    public synchronized static void addOnDataReadyListener(OnDataReadyListener listener) {
+
+        listeners.add(listener);
+        if (dataReady)
+            listener.onDataReady();
+    }
+
+    public synchronized  static void removeOnDataReadyListener(OnDataReadyListener listener) {
+        listeners.remove(listener);
     }
 
     public synchronized static void updateStatistics() {
@@ -129,8 +141,8 @@ public class StatisticsCenter  {
             @Override
             protected void onPostExecute(Void aVoid) {
                 dataReady = true;
-                if (mOdrl != null) {
-                    mOdrl.onDataReady();
+                for (OnDataReadyListener lstn:listeners) {
+                    lstn.onDataReady();
                 }
             }
         };

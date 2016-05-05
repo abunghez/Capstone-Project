@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by andrei on 05.05.2016.
  */
-class Area {
+public class Area {
     Location center;
     int totalSum;
     ArrayList<Location> locations;

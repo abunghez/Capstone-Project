@@ -1,13 +1,10 @@
 package com.compiler_error.flotto;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +19,7 @@ public class StatsActivity extends AppCompatActivity {
 
     CardView mMaxSpentCard, mAvgSpentCard, mMaxLocationCard;
     ProgressBar mProgressBar;
-
+    OnDataReadyListener mOdrl;
 
     AddressResultReceiver mReceiver;
 
@@ -66,7 +63,7 @@ public class StatsActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.statSpinner);
         allCardsGone();
 
-        StatisticsCenter.setOnDataReadyListener(new OnDataReadyListener() {
+        mOdrl = new OnDataReadyListener() {
 
 
             @Override
@@ -104,7 +101,8 @@ public class StatsActivity extends AppCompatActivity {
                 allCardsVisible();
 
             }
-        });
+        };
+        StatisticsCenter.addOnDataReadyListener(mOdrl);
 
     }
 
@@ -118,4 +116,12 @@ public class StatsActivity extends AppCompatActivity {
         valTextView.setText(value);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mOdrl != null) {
+            StatisticsCenter.removeOnDataReadyListener(mOdrl);
+        }
+    }
 }

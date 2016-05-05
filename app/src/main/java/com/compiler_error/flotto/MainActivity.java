@@ -228,6 +228,9 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(this, StatsActivity.class);
 
             startActivity(i);
+        } else if (id == R.id.nav_map) {
+            Intent i = new Intent(this, MapsActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

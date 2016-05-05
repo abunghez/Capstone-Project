@@ -87,7 +87,7 @@ public class StatisticsCenter  {
         }
     }
 
-    public synchronized void updateStatistics() {
+    public synchronized  void updateStatistics() {
 
         AsyncTask<Void, Void, Void> updateTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -155,12 +155,14 @@ public class StatisticsCenter  {
                     }
 
                 }
+
                 return null;
 
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                dataReady = true;
                 if (mOdrl != null) {
                     mOdrl.onDataReady();
                 }

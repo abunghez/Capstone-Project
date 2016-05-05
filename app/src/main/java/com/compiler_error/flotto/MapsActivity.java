@@ -30,7 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static final double DEFAULT_LATITUDE = 44.435496;
     public static final double DEFAULT_LONGITUDE =  26.102527;
-    public static final int DEFAULT_PADDING_DP = 30;
+    public static final int DEFAULT_PADDING_DP = 40;
     private GoogleMap mMap;
     private ProgressBar mMapsSpinner;
 
@@ -111,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 area = areas.get(0);
                 minLat = maxLat = area.getLocation().getLatitude();
                 minLong = maxLong = area.getLocation().getLongitude();
-                for (int i = 1; i < areas.size(); i++) {
+                for (int i = 0; i < areas.size(); i++) {
                     area = areas.get(i);
                     if (area.getLocation().getLatitude() > maxLat) {
                         maxLat = area.getLocation().getLatitude();
@@ -139,7 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mFocusLocation.getLatitude(), mFocusLocation.getLongitude())));
-            mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
         }
     }
 

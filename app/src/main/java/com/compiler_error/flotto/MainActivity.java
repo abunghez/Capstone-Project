@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.compiler_error.flotto.data.FlottoDbContract;
+import com.compiler_error.flotto.data.StatisticsCenter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        StatisticsCenter.initialize(this);
+        StatisticsCenter.updateStatistics();
         mAdapter = new ReceiptsAdapter(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.receiptRecycler);
         mRecyclerView.setAdapter(mAdapter);

@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -16,78 +17,42 @@ import java.util.ArrayList;
 public class StatisticsCenter  {
 
 
-    private Context mContext;
-    private OnDataReadyListener mOdrl;
-    private boolean dataReady;
+    private static Context mContext;
+    private static OnDataReadyListener mOdrl;
+    private static boolean dataReady;
 
-    private Cursor mMaxSpent, mAvgSpent;
-    private Cursor allReceipts;
+    private static Cursor mMaxSpent, mAvgSpent;
+    private static Cursor allReceipts;
 
-    private Location maxLocation;
-    private int maxLocationSum;
+    private static Location maxLocation;
+    private static int maxLocationSum;
 
-    public Location getMaxLocation() {
+    public static Location getMaxLocation() {
         return maxLocation;
     }
 
-    public int getMaxLocationSum() {
+    public static int getMaxLocationSum() {
         return maxLocationSum;
     }
 
 
-    class Area {
-        Location center;
-        int totalSum;
-        ArrayList<Location> locations;
-        double sumLati, sumLongi;
 
-        public Area(Location c, int s) {
-            center = c;
-            totalSum = s;
-            locations  = new ArrayList<Location>();
-            locations.add(c);
-            sumLati = c.getLatitude();
-            sumLongi = c.getLongitude();
-        }
+    private static ArrayList<Area> areas;
 
-        public void insert(Location l, int s) {
-            totalSum+=s;
-
-            sumLati += l.getLatitude();
-            sumLongi += l.getLongitude();
-
-            locations.add(l);
-
-            center.setLatitude(sumLati / locations.size());
-            center.setLongitude(sumLongi / locations.size());
-
-        }
-
-        public int getSum() {
-            return totalSum;
-        }
-
-        public Location getLocation() {
-            return center;
-        }
-    }
-
-    private ArrayList<Area> areas;
-
-    public StatisticsCenter(Context context) {
+    public static void initialize(Context context) {
         mContext = context;
         mOdrl = null;
         dataReady = false;
+        areas = new ArrayList<Area>();
     }
-
-    public synchronized void setOnDataReadyListener(OnDataReadyListener listener) {
+    public synchronized static void setOnDataReadyListener(OnDataReadyListener listener) {
         mOdrl = listener;
         if (dataReady) {
             mOdrl.onDataReady();
         }
     }
 
-    public synchronized  void updateStatistics() {
+    public synchronized static void updateStatistics() {
 
         AsyncTask<Void, Void, Void> updateTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -110,7 +75,7 @@ public class StatisticsCenter  {
                 allReceipts = cr.query(FlottoDbContract.buildReceipts(), null, null, null, FlottoDbContract.ReceiptTableColumns.DATE_COL);
 
                 if (allReceipts!=null) {
-                    areas = new ArrayList<Area>();
+                    areas.clear();
                     maxLocationSum = 0;
                     if (allReceipts.moveToFirst()) {
 
@@ -143,6 +108,7 @@ public class StatisticsCenter  {
 
                             if (!found) {
                                 /* create a new are with this location */
+
                                 areas.add(new Area(l, sum));
 
                                 if (sum > maxLocationSum) {
@@ -176,11 +142,11 @@ public class StatisticsCenter  {
 
     }
 
-    public Cursor getMaxSpent() {
+    public static Cursor getMaxSpent() {
         return mMaxSpent;
     }
 
-    public Cursor getAvgSpent() {
+    public static Cursor getAvgSpent() {
         return mAvgSpent;
     }
 }

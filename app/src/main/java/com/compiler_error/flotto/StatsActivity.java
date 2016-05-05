@@ -20,7 +20,6 @@ import com.compiler_error.flotto.data.StatisticsCenter;
 
 public class StatsActivity extends AppCompatActivity {
 
-    StatisticsCenter mStats;
     CardView mMaxSpentCard, mAvgSpentCard, mMaxLocationCard;
     ProgressBar mProgressBar;
 
@@ -66,14 +65,13 @@ public class StatsActivity extends AppCompatActivity {
         mMaxLocationCard = (CardView) findViewById(R.id.cardMaxLocation);
         mProgressBar = (ProgressBar) findViewById(R.id.statSpinner);
         allCardsGone();
-        mStats = new StatisticsCenter(this);
 
-        mStats.setOnDataReadyListener(new OnDataReadyListener() {
+        StatisticsCenter.setOnDataReadyListener(new OnDataReadyListener() {
 
 
             @Override
             public void onDataReady() {
-                Cursor  maxSpent = mStats.getMaxSpent();
+                Cursor  maxSpent = StatisticsCenter.getMaxSpent();
 
                 int val, valIndex;
 
@@ -84,7 +82,7 @@ public class StatsActivity extends AppCompatActivity {
 
                 }
 
-                Cursor avgSpent = mStats.getAvgSpent();
+                Cursor avgSpent = StatisticsCenter.getAvgSpent();
 
                 if (avgSpent != null && avgSpent.moveToFirst()) {
                     valIndex = avgSpent.getColumnIndex("AVG_SUM");
@@ -93,20 +91,21 @@ public class StatsActivity extends AppCompatActivity {
                 }
 
 
-                updateCard(mMaxLocationCard, getString(R.string.max_spent_location), String.valueOf(mStats.getMaxLocationSum()));
+                updateCard(mMaxLocationCard, getString(R.string.max_spent_location), String.valueOf(StatisticsCenter.getMaxLocationSum()));
 
-                mReceiver = new AddressResultReceiver(new Handler());
-                Intent intent = new Intent(StatsActivity.this, FetchAddressIntentService.class);
-                intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
-                intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mStats.getMaxLocation());
-                StatsActivity.this.startService(intent);
+                if (StatisticsCenter.getMaxLocation() != null) {
+                    mReceiver = new AddressResultReceiver(new Handler());
+                    Intent intent = new Intent(StatsActivity.this, FetchAddressIntentService.class);
+                    intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mReceiver);
 
+                    intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, StatisticsCenter.getMaxLocation());
+                    StatsActivity.this.startService(intent);
+                }
                 allCardsVisible();
 
             }
         });
 
-        mStats.updateStatistics();
     }
 
     private void updateCard(CardView card, String description, String value) {

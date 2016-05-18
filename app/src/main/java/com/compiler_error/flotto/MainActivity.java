@@ -3,6 +3,8 @@ package com.compiler_error.flotto;
 import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -12,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -59,6 +62,24 @@ public class MainActivity extends AppCompatActivity
     public final static int RECEIPTS_LOADER = 0;
     private Location mLastLocation;
 
+    private void cleanupOldEntries() {
+        AsyncTask<Void, Void, Void> cleanupTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ContentResolver cr = MainActivity.this.getContentResolver();
+                Date now = new Date();
+                Date daysAgo = new Date(now.getTime() - 90L * 24 * 60 * 60 * 1000);
+
+                String oldDate = new SimpleDateFormat("yyyy-MM-dd").format(daysAgo);
+                String[] selectionArgs={oldDate};
+                cr.delete(FlottoDbContract.buildReceipts(), FlottoDbContract.ReceiptTableColumns.DATE_COL + " <= ?",
+                        selectionArgs);
+                return null;
+            }
+        };
+
+        cleanupTask.execute();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +97,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        cleanupOldEntries();
         StatisticsCenter.initialize(this);
-        StatisticsCenter.updateStatistics();
+        //StatisticsCenter.updateStatistics();
         mAdapter = new ReceiptsAdapter(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.receiptRecycler);
         mRecyclerView.setAdapter(mAdapter);
@@ -225,8 +246,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             dispatchTakePictureIntent();
-        } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_stats) {
             Intent i = new Intent(this, StatsActivity.class);
 
@@ -260,6 +279,7 @@ public class MainActivity extends AppCompatActivity
         if (data != null) {
             data.moveToFirst();
             mAdapter.swapCursor(data);
+            StatisticsCenter.updateStatistics();
         }
     }
 

@@ -216,12 +216,27 @@ public class FlottoContentProvider extends ContentProvider {
             default:
                 break;
         }
+        db.close();
         return retUri;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        Uri retUri = null;
+        int rows = 0;
+        SQLiteDatabase db = mHelper.getWritableDatabase();
+        switch (mUriMatcher.match(uri)) {
+            case RECEIPTS:
+                db.beginTransaction();
+                rows = db.delete(FlottoDbContract.RECEIPT_TABLE, selection, selectionArgs);
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                break;
+            default:
+                break;
+        }
+        db.close();
+        return rows;
     }
 
     @Override

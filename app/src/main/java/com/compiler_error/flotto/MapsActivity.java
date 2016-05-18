@@ -30,7 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static final double DEFAULT_LATITUDE = 44.435496;
     public static final double DEFAULT_LONGITUDE =  26.102527;
-    public static final int DEFAULT_PADDING_DP = 40;
+    public static final int DEFAULT_PADDING_DP = 100;
     private GoogleMap mMap;
     private ProgressBar mMapsSpinner;
 

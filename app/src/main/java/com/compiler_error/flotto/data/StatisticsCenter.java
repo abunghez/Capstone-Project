@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class StatisticsCenter  {
 
+    private final static int DISTANCE_SAME_LOCATION = 500;
 
     private static Context mContext;
 
@@ -26,6 +27,7 @@ public class StatisticsCenter  {
 
     private static Location maxLocation;
     private static int maxLocationSum;
+
 
     public static Location getMaxLocation() {
         return maxLocation;
@@ -106,7 +108,7 @@ public class StatisticsCenter  {
 
                             boolean found = false;
                             for (Area a:areas) {
-                                if (a.center.distanceTo(l) < 1000) {
+                                if (a.center.distanceTo(l) < DISTANCE_SAME_LOCATION) {
                                     /* found an area to insert this location into */
                                     a.insert(l, sum);
                                     found = true;

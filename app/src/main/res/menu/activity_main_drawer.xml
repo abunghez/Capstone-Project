@@ -10,11 +10,13 @@
             android:id="@+id/nav_stats"
             android:icon="@drawable/ic_menu_graph"
             android:title="@string/statistics" />
+       <!-- not really anything to set... if the user does not
+       want to track location, he can not grant/revoke location permission
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/settings" />
-
+        -->
         <item
             android:id="@+id/nav_map"
             android:title="@string/map" />

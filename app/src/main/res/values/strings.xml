@@ -24,4 +24,6 @@
     <string name="daily_avg_description">Average spent daily</string>
     <string name="max_spent_location">Max spent in one location</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="interstitial_ad_unit_id">ca-app-pub-7539375348569671/3294691548</string>
 </resources>

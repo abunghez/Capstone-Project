@@ -22,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.compiler_error.flotto.data.FlottoDbContract;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -48,6 +51,7 @@ public class AddReceiptFragment extends Fragment {
     Location mLocation;
     TextView mLocationLabel;
 
+    InterstitialAd mInterstitialAd;
     public AddReceiptFragment() {
         super();
     }
@@ -116,6 +120,7 @@ public class AddReceiptFragment extends Fragment {
                 df.show(getActivity().getFragmentManager(), "datePicker");
 
             }
+
         });
 
         mInsert = (Button) v.findViewById(R.id.receiptAddButton);
@@ -150,6 +155,12 @@ public class AddReceiptFragment extends Fragment {
                         FlottoDbContract.ReceiptTableColumns.buildReceipts(),
                         data
                 );
+
+
+                if (mInterstitialAd.isLoaded())
+                        mInterstitialAd.show();
+
+
                 getActivity().finish();
 
             }
@@ -181,9 +192,20 @@ public class AddReceiptFragment extends Fragment {
             i.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLocation);
             getActivity().startService(i);
         }
+
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        requestNewInterstitial();
         return v;
     }
 
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("A5DAADE46E8E03504CFD2C5D0B8B9129")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
     static public Bundle packNewReceiptFragmentArgs(int id, int sum, String date, String path) {
         Bundle fragmentArgs = new Bundle();
 

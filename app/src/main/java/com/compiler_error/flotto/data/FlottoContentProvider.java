@@ -148,13 +148,11 @@ public class FlottoContentProvider extends ContentProvider {
                 ret = mHelper.getReadableDatabase().rawQuery(QUERY_MIN_DAY,null);
                 if (ret != null && ret.moveToFirst()) {
                     min_day = ret.getInt(ret.getColumnIndex("MIN_DAY"));
-                    ret.close();
                 } else return null;
 
                 ret = mHelper.getReadableDatabase().rawQuery(QUERY_MAX_DAY, null);
                 if (ret != null && ret.moveToFirst()) {
                     max_day = ret.getInt(ret.getColumnIndex("MAX_DAY"));
-                    ret.close();
                 } else return null;
 
                 if (max_day < min_day) return null;
@@ -216,7 +214,6 @@ public class FlottoContentProvider extends ContentProvider {
             default:
                 break;
         }
-        db.close();
         return retUri;
     }
 
@@ -235,7 +232,6 @@ public class FlottoContentProvider extends ContentProvider {
             default:
                 break;
         }
-        db.close();
         return rows;
     }
 

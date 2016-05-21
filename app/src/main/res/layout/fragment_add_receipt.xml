@@ -26,28 +26,11 @@
             android:layout_marginEnd="16dp">
             <EditText
                 android:id="@+id/sumEditText"
-                android:inputType="number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textAlignment="textEnd"
-                android:selectAllOnFocus="true"
-                android:textColor="@color/primary_text"
-                android:layout_marginBottom="8dp"
-
+                style="@style/SumEditText"
                 />
             <EditText
                 android:id="@+id/receiptDatePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="textEnd"
-                android:layout_gravity="end"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/secondary_text"
-                android:layout_marginBottom="8dp"
+                style="@style/DateEditText"
                 />
 
             <TextView

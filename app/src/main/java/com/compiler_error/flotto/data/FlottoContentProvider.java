@@ -96,7 +96,7 @@ public class FlottoContentProvider extends ContentProvider {
                 ret = mHelper.getReadableDatabase().query(
                   FlottoDbContract.RECEIPT_TABLE,
                         projection,
-                        null, null, null, null, sortOrder);
+                        selection, selectionArgs, null, null, sortOrder);
                 break;
             case RECEIPTS_WITH_ID:
                 ret = mHelper.getReadableDatabase().query(

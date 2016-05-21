@@ -83,31 +83,7 @@ public class AddReceiptFragment extends Fragment {
 
         mDate.setFocusable(false);
         mDate.setOnClickListener(new View.OnClickListener() {
-             class DatePickerFragment extends DialogFragment implements
-                    DatePickerDialog.OnDateSetListener {
-
-                 @Override
-                 public Dialog onCreateDialog(Bundle savedInstanceState) {
-                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                     Date date;
-                     int year, month, day;
-                     try {
-                         date = sdf.parse(mDate.getText().toString());
-                     } catch (ParseException e) {
-                         e.printStackTrace();
-                         date = new Date();
-                     }
-
-                     Calendar cal = Calendar.getInstance();
-                     cal.setTime(date);
-
-                     year = cal.get(Calendar.YEAR);
-                     month = cal.get(Calendar.MONTH);
-                     day = cal.get(Calendar.DAY_OF_MONTH);
-
-                     return new DatePickerDialog(getActivity(),this,year,month,day);
-                 }
-
+             class DatePickerFragment extends ReceiptDateDialogFragment {
                  @Override
                  public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                      mDate.setText(year+"-"+String.format("%02d",monthOfYear+1)+"-"
@@ -116,7 +92,10 @@ public class AddReceiptFragment extends Fragment {
              };
             @Override
             public void onClick(View v) {
-                DialogFragment df = new DatePickerFragment();
+                DatePickerFragment df = new DatePickerFragment();
+                Bundle arg = new Bundle();
+                arg.putString(df.KEY_DATE, mDate.getText().toString());
+                df.setArguments(arg);
                 df.show(getActivity().getFragmentManager(), "datePicker");
 
             }
@@ -156,11 +135,12 @@ public class AddReceiptFragment extends Fragment {
                         data
                 );
 
-
-                if (mInterstitialAd.isLoaded())
+                /* 25% chance of displaying an add here */
+                if (Math.random() < 1.) {
+                    if (mInterstitialAd.isLoaded())
                         mInterstitialAd.show();
 
-
+                }
                 getActivity().finish();
 
             }
@@ -201,7 +181,7 @@ public class AddReceiptFragment extends Fragment {
 
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("A5DAADE46E8E03504CFD2C5D0B8B9129")
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);

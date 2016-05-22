@@ -51,7 +51,7 @@ public class FetchAddressIntentService extends IntentService {
             addresses = null;
         }
 
-        if (addresses == null) {
+        if (addresses == null || addresses.size() == 0) {
             deliverResultToReceiver(Constants.FAILURE_RESULT, "");
         } else {
             String fullAddr="";

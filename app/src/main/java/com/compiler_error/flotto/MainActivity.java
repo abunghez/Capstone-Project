@@ -10,6 +10,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,14 +38,18 @@ import com.compiler_error.flotto.data.StatisticsCenter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton mFab;
     private String mCurrentPhotoFile;
     GoogleApiClient mGoogleAPIClient;
+    TessBaseAPI mTess;
 
     private static final int LOCATION_PERMISSION_CODE = 0;
 
@@ -67,6 +73,50 @@ public class MainActivity extends AppCompatActivity
     private AlarmManager mAlarmManager;
     private PendingIntent mPendingIntent;
 
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
+    }
+    private void moveTessFile() {
+        String dataPath = getExternalFilesDir(null).getAbsolutePath();
+        File tessDir = new File(dataPath+"/tessdata/");
+        File trainFile = new File(dataPath+"/tessdata/eng.traineddata");
+        AssetManager assets = getAssets();
+
+
+        if (!tessDir.exists()) {
+            tessDir.mkdir();
+        }
+
+        if (!trainFile.exists()) {
+            InputStream in= null;
+            OutputStream out = null;
+            try {
+                in = assets.open("eng.traineddata");
+                out = new FileOutputStream(trainFile);
+                copyFile(in, out);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+
+
+                    if (out != null)
+                        out.close();
+                    if (in != null)
+                        in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
     private void cleanupOldEntries() {
         AsyncTask<Void, Void, Void> cleanupTask = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -90,7 +140,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        moveTessFile();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -135,6 +185,9 @@ public class MainActivity extends AppCompatActivity
 
         mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
                 0, AlarmManager.INTERVAL_HALF_DAY, mPendingIntent);
+        mTess = new TessBaseAPI();
+        mTess.init(getExternalFilesDir(null).getAbsolutePath(), "eng");
+        mTess.setVariable("tessedit_char_whitelist", "01234567890TOALD.,-/");
     }
 
     public void dispatchTakePictureIntent() {
@@ -188,13 +241,33 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
 
+            int theSum = 0;
+            String theDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
             /**
-             * TODO: run the image through tesseract
+             *  run the image through tesseract
              *
-             * for now, just display the receipt detail fragment with the thumbnail of the
-             * acquired image
              */
+            if (mCurrentPhotoFile != null) {
+                Bitmap tessBmp = BitmapFactory.decodeFile(mCurrentPhotoFile);
+
+                mTess.setImage(tessBmp);
+                String tessString = mTess.getUTF8Text();
+
+            /* start looking for the sum */
+                Pattern sumPattern = Pattern.compile("TOTAL\\s*(\\d+)");
+                Matcher m = sumPattern.matcher(tessString);
+
+                while (m.find()) {
+                    if (m.groupCount() >= 1)
+                        try {
+                            theSum = new Integer(m.group(1));
+                        }catch (Exception e) {
+                            theSum = 0;
+                        }
+                }
+            }
+            /*******************************************************************/
             Intent intent = new Intent(this, NewReceiptActivity.class);
 
             if (mCurrentPhotoFile != null) {
@@ -236,8 +309,8 @@ public class MainActivity extends AppCompatActivity
                 intent = NewReceiptActivity.packNewReceiptIntent(
                         this,
                         AddReceiptFragment.INVALID_ID,
-                        0,
-                        new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                        theSum,
+                        theDate,
                         "file://" + mCurrentPhotoFile,
                         mLastLocation
                 );

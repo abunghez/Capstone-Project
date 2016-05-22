@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.compiler_error.flotto.data.FlottoDbContract;
 import com.google.android.gms.ads.AdListener;
@@ -111,7 +112,14 @@ public class AddReceiptFragment extends Fragment {
                 int sum;
 
                 date = mDate.getText().toString();
-                sum = Integer.parseInt(mSum.getText().toString());
+                try {
+                    sum = Integer.parseInt(mSum.getText().toString());
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), R.string.invalid_number_msg, Toast.LENGTH_SHORT)
+                    .show();
+                    getActivity().finish();
+                    return;
+                }
 
                 ContentValues data;
 

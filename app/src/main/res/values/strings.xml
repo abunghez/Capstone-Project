@@ -44,4 +44,6 @@
     <string name="location_cd">Receipt location</string>
     <string name="delete_cd">Delete receipt</string>
     <string name="confirm_cd">Confirm receipt data</string>
+
+    <string name="invalid_number_msg">Invalid number format</string>
 </resources>

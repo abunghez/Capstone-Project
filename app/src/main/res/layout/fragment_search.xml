@@ -10,12 +10,14 @@
         style="@style/SumEditText"
         android:layout_width="match_parent"
         android:text=""
-        android:hint="@string/search_sum_hint"/>
+        android:hint="@string/search_sum_hint"
+        android:contentDescription="@string/search_sum_hint"/>
 
     <EditText
         android:id="@+id/search_date_edit"
         style="@style/DateEditText"
         android:hint="@string/search_date_hint"
+        android:contentDescription="@string/search_date_hint"
         />
 
 </LinearLayout>

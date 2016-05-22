@@ -153,7 +153,10 @@ public class AddReceiptFragment extends Fragment {
         mFilePath = fragmentArgs.getString(PHOTO_PATH_KEY);
 
         mSum.setText(String.valueOf(fragmentArgs.getInt(SUM_KEY, 0)));
+        mSum.setContentDescription(getString(R.string.sum_cd) + ": "+mSum.getText().toString());
+
         mDate.setText(fragmentArgs.getString(DATE_KEY));
+        mDate.setContentDescription(getString(R.string.date_cd) + ": "+mDate.getText().toString());
         if (mFilePath != null) {
             Picasso.with(getActivity()).load(mFilePath).into(mImageView);
         }

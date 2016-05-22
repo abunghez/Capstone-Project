@@ -67,8 +67,10 @@ public class ReceiptsAdapter extends RecyclerView.Adapter<ReceiptsAdapter.ViewHo
             path = mCursor
                     .getString(mCursor.getColumnIndex(FlottoDbContract.ReceiptTableColumns.FILE_COL));
             holder.sumTextView.setTextSize(tsize);
-            holder.dateTextView.setText(date);;
+            holder.dateTextView.setText(date);
+            holder.dateTextView.setContentDescription(mContext.getString(R.string.date_cd)+ ": "+ date);
             holder.sumTextView.setText(String.valueOf(sum));
+            holder.sumTextView.setContentDescription(mContext.getString(R.string.sum_cd)+ ": "+ sum);
 
             Picasso.with(holder.thumbView.getContext())
                     .load(path)

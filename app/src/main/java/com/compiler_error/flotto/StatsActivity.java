@@ -32,6 +32,7 @@ public class StatsActivity extends AppCompatActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             String locationString = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
             ((TextView)mMaxLocationCard.findViewById(R.id.statTextViewLocation)).setText(locationString);
+            mMaxLocationCard.findViewById(R.id.statTextViewLocation).setContentDescription(locationString);
         }
     }
     void allCardsGone() {
@@ -114,6 +115,9 @@ public class StatsActivity extends AppCompatActivity {
 
         descTextView.setText(description);
         valTextView.setText(value);
+
+        descTextView.setContentDescription(description);
+        valTextView.setContentDescription(value);
     }
 
     @Override

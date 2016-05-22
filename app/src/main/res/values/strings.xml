@@ -20,6 +20,7 @@
     <string name="map">Map</string>
     <string name="settings">Settings</string>
     <string name="title_activity_stats">Statistics</string>
+    <string name="title_activity_search">Search Receipts</string>
     <string name="search_label">Search</string>
 
 
@@ -36,4 +37,11 @@
     <string name="winning_notification_title">You have winning receipts</string>
     <string name="notification_sum">Sum</string>
 
+
+    <string name="receipt_cd">Receipt image</string>
+    <string name="sum_cd">Receipt sum</string>
+    <string name="date_cd">Receipt date</string>
+    <string name="location_cd">Receipt location</string>
+    <string name="delete_cd">Delete receipt</string>
+    <string name="confirm_cd">Confirm receipt data</string>
 </resources>

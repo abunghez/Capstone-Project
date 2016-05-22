@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "634619722810",
+    "firebase_url": "https://flotto-36c04.firebaseio.com",
+    "project_id": "flotto-36c04",
+    "storage_bucket": "flotto-36c04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634619722810:android:f6d5ee4dccc5b50f",
+        "android_client_info": {
+          "package_name": "com.compiler_error.flotto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634619722810-svu5o7h8cab7ifp2r5hn5gfoqvk50bm9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7q0-FIR92kkCXy7gr6ykz82GZOsUp6eg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

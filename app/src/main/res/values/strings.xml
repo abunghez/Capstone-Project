@@ -33,4 +33,7 @@
     <string name="search_date_hint">Search by date</string>
     <string name="search_sum_hint">Search by sum</string>
 
+    <string name="winning_notification_title">You have winning receipts</string>
+    <string name="notification_sum">Sum</string>
+
 </resources>

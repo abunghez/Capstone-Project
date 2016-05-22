@@ -2,8 +2,9 @@ package com.compiler_error.flotto;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.LoaderManager;
-import android.content.ContentProvider;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -61,6 +62,10 @@ public class MainActivity extends AppCompatActivity
 
     public final static int RECEIPTS_LOADER = 0;
     private Location mLastLocation;
+
+
+    private AlarmManager mAlarmManager;
+    private PendingIntent mPendingIntent;
 
     private void cleanupOldEntries() {
         AsyncTask<Void, Void, Void> cleanupTask = new AsyncTask<Void, Void, Void>() {
@@ -123,6 +128,13 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(this, FetchFlottoResultsService.class);
+        mPendingIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        mAlarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+                0, AlarmManager.INTERVAL_HALF_DAY, mPendingIntent);
     }
 
     public void dispatchTakePictureIntent() {
@@ -344,4 +356,6 @@ public class MainActivity extends AppCompatActivity
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleAPIClient);
 
     }
+
+
 }

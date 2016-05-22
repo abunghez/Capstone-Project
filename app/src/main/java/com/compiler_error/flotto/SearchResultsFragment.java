@@ -21,6 +21,11 @@ public class SearchResultsFragment extends Fragment implements LoaderManager.Loa
     public final static String KEY_DATE="KEY_DATE";
     private static final int SEARCH_LOADER = 1;
 
+    public final static String KEY_SELECTION="KEY_SELECTION";
+    public final static String KEY_SELECTION_ARGS="KEY_SELECTION_ARGS";
+
+    String mSelection; String[] mSelectionArgs;
+
     ReceiptsAdapter mAdapter;
     RecyclerView mRecycler;
 
@@ -45,10 +50,15 @@ public class SearchResultsFragment extends Fragment implements LoaderManager.Loa
         setRetainInstance(true);
         mQSum = getArguments().getString(KEY_SUM, null);
         mQDate = getArguments().getString(KEY_DATE, null);
+
+        mSelection = getArguments().getString(KEY_SELECTION, null);
+        mSelectionArgs = getArguments().getStringArray(KEY_SELECTION_ARGS);
+
         mAdapter = new ReceiptsAdapter(getActivity());
         mRecycler = (RecyclerView)v.findViewById(R.id.search_recycler_view);
         mRecycler.setAdapter(mAdapter);
         mRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
 
         getLoaderManager().initLoader(SEARCH_LOADER, null, this);
 
@@ -62,29 +72,35 @@ public class SearchResultsFragment extends Fragment implements LoaderManager.Loa
         String selectSumString=null, selectDateString=null, selectString = null;
         String[] selectArgs = null;
 
+        if (mSelection == null) {
         /* At least one of the strings is not null */
-        if (mQSum != null) {
-            selectString = selectSumString = FlottoDbContract.ReceiptTableColumns.SUM_COL + " = ? ";
-            if (mQDate == null) {
-                selectArgs = new String[1];
+            if (mQSum != null) {
+                selectString = selectSumString = FlottoDbContract.ReceiptTableColumns.SUM_COL + " = ? ";
+                if (mQDate == null) {
+                    selectArgs = new String[1];
+                    selectArgs[0] = mQSum;
+                }
+            }
+            if (mQDate != null) {
+                selectString = selectDateString = FlottoDbContract.ReceiptTableColumns.DATE_COL + " = ? ";
+                if (mQSum == null) {
+                    selectArgs = new String[1];
+                    selectArgs[0] = mQDate;
+                }
+            }
+
+            if (mQSum != null && mQDate != null) {
+                selectArgs = new String[2];
+                selectString = selectSumString + " AND " + selectDateString;
                 selectArgs[0] = mQSum;
+                selectArgs[1] = mQDate;
             }
-        }
-        if (mQDate != null) {
-            selectString = selectDateString = FlottoDbContract.ReceiptTableColumns.DATE_COL + " = ? ";
-            if (mQSum == null) {
-                selectArgs = new String[1];
-                selectArgs[0] = mQDate;
-            }
-        }
 
-        if (mQSum != null && mQDate != null) {
-            selectArgs = new String[2];
-            selectString = selectSumString + " AND " + selectDateString;
-            selectArgs[0] = mQSum;
-            selectArgs[1] = mQDate;
+        } else {
+            /* triggered by the service */
+            selectString = mSelection;
+            selectArgs = mSelectionArgs;
         }
-
 
         return new CursorLoader(getActivity(), FlottoDbContract.buildReceipts(), null,
                 selectString, selectArgs, null);

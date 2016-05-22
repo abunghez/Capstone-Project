@@ -10,6 +10,7 @@
     <string name="receipt_date_label">Receipt Date:</string>
     <string name="receipt_sum_label">Receipt Sum:</string>
     <string name="receipt_insert">Confirm</string>
+    <string name="delete_receipt_button">Delete</string>
     <string name="receipt_cancel">Cancel</string>
 
     <string name="add_new">Add New</string>

@@ -42,7 +42,7 @@ public class AddReceiptFragment extends Fragment {
     public static final String DATE_KEY="DATE";
     public static final String ID_KEY="ID";
     public static final String LOCATION_KEY="LOCATION";
-    Button mInsert;
+    Button mInsert, mDelete;
     EditText mDate, mSum;
     ImageView mImageView;
     String mFilePath;
@@ -136,7 +136,7 @@ public class AddReceiptFragment extends Fragment {
                 );
 
                 /* 25% chance of displaying an add here */
-                if (Math.random() < 1.) {
+                if (Math.random() < .25) {
                     if (mInterstitialAd.isLoaded())
                         mInterstitialAd.show();
 
@@ -145,6 +145,8 @@ public class AddReceiptFragment extends Fragment {
 
             }
         });
+
+
 
         mImageView = (ImageView)v.findViewById(R.id.receiptImageView);
         Bundle fragmentArgs = getArguments();
@@ -159,7 +161,26 @@ public class AddReceiptFragment extends Fragment {
 
         mId = fragmentArgs.getInt(ID_KEY, INVALID_ID);
 
+        mDelete = (Button) v.findViewById(R.id.deleteButton);
+        if (mId != INVALID_ID) {
+            mDelete.setVisibility(View.VISIBLE);
+        }
+        mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] selectionArgs = new String[1];
+                if (mId != INVALID_ID) {
+                    selectionArgs[0] = String.valueOf(mId);
 
+                    getActivity().getContentResolver().delete(FlottoDbContract.buildReceipts(),
+                            FlottoDbContract.ReceiptTableColumns._ID + "=?", selectionArgs);
+                }
+
+                if (mInterstitialAd.isLoaded())
+                    mInterstitialAd.show();
+                getActivity().finish();
+            }
+        });
         mLocation = fragmentArgs.getParcelable(LOCATION_KEY);
 
         mLocationLabel = (TextView) v.findViewById(R.id.locationLabel);
@@ -181,7 +202,7 @@ public class AddReceiptFragment extends Fragment {
 
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .addTestDevice("A5DAADE46E8E03504CFD2C5D0B8B9129")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
